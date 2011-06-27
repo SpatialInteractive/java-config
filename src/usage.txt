@@ -1,0 +1,17 @@
+Syntax: java -jar java-config.jar [FLAGS]
+
+Flags:
+	--home				Java Home
+	--jdkhome			JDK home (discovered by heuristic)
+	--arch				JRE architecture (ie. amd64)
+	--version			Java version
+	--vmversion			Virtual machine version
+	--specversion			Java specification version (ie. 1.6)
+	--runtimeversion		Runtime version
+	--osversion			Operating System version
+	--osname			Operating System name (ie. Linux)
+	--datamodel			JRE data model (ie. 32 or 64)
+	--endian			System endian-ness (ie. little or big)
+	--cflags			CFLAGS to use when compiling a JNI library
+	--ldflags			LDFLAGS to use when linking to the jvm
+	

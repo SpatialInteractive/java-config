@@ -1,0 +1,33 @@
+<project name="java-config" default="dist">
+	<target name="compile">
+		<mkdir dir="build/classes"/>
+		<javac srcdir="src" destdir="build/classes" includeantruntime="false"/>
+		<copy todir="build/classes">
+			<fileset dir="src">
+				<include name="*.txt"/>
+			</fileset>
+		</copy>
+		
+		<exec executable = "git" output="build/classes/build.txt" failifexecutionfails="false" failonerror="false">
+			<arg value = "rev-parse" />
+			<arg value = "HEAD" />
+		</exec>
+	</target>
+	
+	<target name="jar" depends="compile">
+		<jar jarfile="build/java-config.jar" basedir="build/classes">
+			<manifest>
+				<attribute name="Main-Class" value="JavaConfig"/>
+			</manifest>
+		</jar>
+	</target>
+	
+	<target name="clean">
+		<delete dir="build"/>
+	</target>
+	
+	<target name="dist" depends="clean,jar">
+		<copy todir="." file="build/java-config.jar"/>
+	</target>
+</project>
+
