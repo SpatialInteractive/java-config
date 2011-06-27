@@ -1,3 +1,5 @@
+	https://github.com/stellaeof/java-config
+
 Syntax: java -jar java-config.jar [FLAGS]
 
 Flags:
