@@ -4,7 +4,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.io.UnsupportedEncodingException;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.regex.Pattern;
 
 
 /**
@@ -161,6 +163,27 @@ public class JavaConfig {
 		out.println(flags.toString());
 	}
 
+	public void reportLDFlags() throws IOException {
+		String prop=System.getProperty("java.library.path");
+		if (prop==null) error("Could not find java.library.path");
+		String[] paths=prop.split(Pattern.quote(String.valueOf(File.pathSeparatorChar)));
+		StringBuilder buffer=new StringBuilder();
+		
+		Set<String> found=new HashSet<String>();
+		for (String path: paths) {
+			File abspath=new File(path).getAbsoluteFile();
+			if (!abspath.isDirectory()) continue;
+			
+			String canpath=abspath.getCanonicalPath();
+			if (!found.add(canpath)) continue;
+			
+			if (buffer.length()>0) buffer.append(' ');
+			buffer.append("-L").append(canpath);
+		}
+		
+		out.println(buffer.toString());
+	}
+	
 	public void run() throws IOException {
 		if (args.length==0) {
 			usage();
@@ -183,6 +206,7 @@ public class JavaConfig {
 			else if (flag.equals("endian")) reportProp("sun.cpu.endian");
 			else if (flag.equals("language")) reportProp("user.language");
 			else if (flag.equals("cflags")) reportCFlags();
+			else if (flag.equals("ldflags")) reportLDFlags();
 		}
 		
 		out.flush();
