@@ -52,6 +52,7 @@ Here is an example Linux makefile for building a shared library:
 			-lmapnik2
 
 And here is an example OSX makefile for building a jnilib:
+
 	JAVA_CMD ?= java
 	CFLAGS ?= -O3
 	FREETYPE_CFLAGS ?= $(shell freetype-config --cflags)
