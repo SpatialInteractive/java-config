@@ -143,7 +143,24 @@ public class JavaConfig {
 		out.println(jdkDir.getAbsolutePath());
 	}
 	
-	public void reportCFlags() {
+	public boolean isOSX() {
+	  return "Mac OS X".equals(System.getProperty("os.name"));
+	}
+	
+	public void reportCFlags() throws IOException {
+	  if (isOSX()) {
+	    // OSX is special, as always
+	    // Up one level from the java.home is a Headers directory
+	    File jreHome=new File(System.getProperty("java.home", ""));
+	    File headersDir=new File(jreHome.getParentFile(), "Headers");
+	    if (headersDir.isDirectory()) {
+	      out.println("-I" + headersDir.getCanonicalPath());
+  	    return;
+	    }
+	    
+	    // Otherwise, fall through to standard JDK directory structure detect
+	  }
+	  
 		File jdkDir=getJdkHome();
 		if (jdkDir==null) error("Could not determine JDK location");
 		
@@ -164,6 +181,18 @@ public class JavaConfig {
 	}
 
 	public void reportLDFlags() throws IOException {
+	  if (isOSX()) {
+	    // OSX is special, as always
+	    // Up one level from the java.home is a Headers directory
+	    File jreHome=new File(System.getProperty("java.home", ""));
+	    File libDir=new File(jreHome.getParentFile(), "Libraries");
+      if (libDir.isDirectory()) {
+        out.println("-L" + libDir.getCanonicalPath());
+        return;
+      }
+      // Otherwise, fall through to standard directory layout detect
+	  }
+	  
 		String prop=System.getProperty("java.library.path");
 		if (prop==null) error("Could not find java.library.path");
 		String[] paths=prop.split(Pattern.quote(String.valueOf(File.pathSeparatorChar)));
